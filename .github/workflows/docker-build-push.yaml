@@ -37,6 +37,7 @@ jobs:
 
 
     - name: Create pull request
+      id: cpr
       uses: peter-evans/create-pull-request@v6
       with:
         token: ${{ secrets.PAT }}
@@ -45,3 +46,8 @@ jobs:
         body: This pull request updates the image tag to ${{ github.ref_name }}.
         base: main
 
+    - name: Enable Pull Request Automerge
+      if: ${{ steps.cpr.outputs.pull-request-number }}
+      run: gh pr merge --merge --pr ${{ steps.cpr.outputs.pull_request_number }}
+      env:
+        GH_TOKEN: ${{ secrets.PAT }}
