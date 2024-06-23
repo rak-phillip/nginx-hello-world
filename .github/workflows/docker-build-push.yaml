@@ -32,14 +32,21 @@ jobs:
 
     - name: Update image tag in deployment.yaml
       run: |
-        IMAGE_TAG=${{ github.ref }}
+        IMAGE_TAG=${{ github.ref_name }}
         sed -i "s|rakpw/nginx-helloworld:[0-9]\+\.[0-9]\+\.[0-9]\+|rakpw/nginx-helloworld:${IMAGE_TAG}|g" fleet/deployment.yaml
 
     - name: Commit and push changes
       run: |
         git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
-        git add fleet/deployment.yaml
-        git commit -m "Update deployment.yaml with new image tag ${{ github.ref }}"
-        git push
 
+        # Get the default branch name
+        DEFAULT_BRANCH=$(git branch --remote --list 'origin/HEAD' | sed 's/origin\///')
+
+        # Checkout the default branch
+        git checkout $DEFAULT_BRANCH
+
+        # Add, commit, and push the changes
+        git add fleet/deployment.yaml
+        git commit -m "Update deployment.yaml with new image tag ${{ github.ref_name }}"
+        git push
