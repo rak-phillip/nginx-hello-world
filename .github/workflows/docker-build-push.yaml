@@ -1,0 +1,45 @@
+name: Docker Build, Push and Update Deployment
+
+on:
+  push:
+    tags:
+      - 'v*'  # Push events for tags starting with 'v'
+
+jobs:
+  build-push-update:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Build and push Docker image
+      id: build-push
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: rakpw/nginx-helloworld:${{ github.ref }}
+
+    - name: Update image tag in deployment.yaml
+      run: |
+        IMAGE_TAG=${{ github.ref }}
+        sed -i "s|rakpw/nginx-helloworld:[0-9]\+\.[0-9]\+\.[0-9]\+|rakpw/nginx-helloworld:${IMAGE_TAG}|g" fleet/deployment.yaml
+
+    - name: Commit and push changes
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git add fleet/deployment.yaml
+        git commit -m "Update deployment.yaml with new image tag ${{ github.ref }}"
+        git push
+
