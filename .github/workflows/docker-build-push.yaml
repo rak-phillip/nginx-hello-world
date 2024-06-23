@@ -35,33 +35,14 @@ jobs:
         IMAGE_TAG=${{ github.ref_name }}
         sed -i "s|rakpw/nginx-helloworld:[0-9]\+\.[0-9]\+\.[0-9]\+|rakpw/nginx-helloworld:${IMAGE_TAG}|g" fleet/deployment.yaml
 
-    - name: Commit and push changes
-      run: |
-        IMAGE_TAG=${{ github.ref_name }}
-        git config --global user.email "action@github.com"
-        git config --global user.name "GitHub Action"
-        git checkout -b update-image-tag
-        git add fleet/deployment.yaml
-        git commit -m "Update image tag to ${IMAGE_TAG}"
-        git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/rak-phillip/nginx-hello-world.git
-        git push origin update-image-tag
 
     - name: Create pull request
-      uses: actions/github-script@v5
+      uses: peter-evans/create-pull-request@v6
       with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        script: |
-          const IMAGE_TAG = ${{ github.ref_name }}
-          const title = `Update image tag to ${IMAGE_TAG}`
-          const body = `This pull request updates the image tag to ${IMAGE_TAG}.`
-          const head = 'update-image-tag'
-          const base = 'main'
-          const pullRequest = await github.rest.pulls.create({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            title,
-            body,
-            head,
-            base
-          })
-          console.log(`Created pull request #${pullRequest.data.number}`)
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: update-image-tag
+        title: Update image tag to ${{ github.ref_name }}
+        body: This pull request updates the image tag to ${{ github.ref_name }}.
+        head: main
+        base: update-image-tag
+
