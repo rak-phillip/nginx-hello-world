@@ -40,6 +40,7 @@ jobs:
         IMAGE_TAG=${{ github.ref_name }}
         git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
+        git fetch
         git branch temp-branch
         git add fleet/deployment.yaml
         git commit -m "Update image tag to ${IMAGE_TAG}"
