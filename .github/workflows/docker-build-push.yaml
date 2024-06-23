@@ -43,10 +43,8 @@ jobs:
         git checkout -b update-image-tag
         git add fleet/deployment.yaml
         git commit -m "Update image tag to ${IMAGE_TAG}"
-        git remote set-url origin https://${TOKEN}@github.com/rak-phillip/nginx-hello-world.git
+        git remote set-url origin https://${{ secrets.GITHUB_TOKEN }}@github.com/rak-phillip/nginx-hello-world.git
         git push origin update-image-tag
-      env:
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Create pull request
       uses: actions/github-script@v5
