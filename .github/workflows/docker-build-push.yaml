@@ -39,7 +39,7 @@ jobs:
     - name: Create pull request
       uses: peter-evans/create-pull-request@v6
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.PAT }}
         branch: update-image-tag
         title: Update image tag to ${{ github.ref_name }}
         body: This pull request updates the image tag to ${{ github.ref_name }}.
