@@ -43,6 +43,5 @@ jobs:
         branch: update-image-tag
         title: Update image tag to ${{ github.ref_name }}
         body: This pull request updates the image tag to ${{ github.ref_name }}.
-        head: main
-        base: update-image-tag
+        base: main
 
