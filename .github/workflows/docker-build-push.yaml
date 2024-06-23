@@ -41,10 +41,12 @@ jobs:
       uses: peter-evans/create-pull-request@v6
       with:
         token: ${{ secrets.PAT }}
-        branch: update-image-tag
-        title: Update image tag to ${{ github.ref_name }}
+        branch: update-image-tag-${{ IMAGE_TAG }}
+        title: Update image tag to ${{ IMAGE_TAG }}
         body: This pull request updates the image tag to ${{ github.ref_name }}.
         base: main
+      env:
+        IMAGE_TAG: ${{ github.ref_name }}
 
     - name: Enable Pull Request Automerge
       if: ${{ steps.cpr.outputs.pull-request-number }}
