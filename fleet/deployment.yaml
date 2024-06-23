@@ -18,7 +18,7 @@ spec:
         app: nginx-helloworld
     spec:
       containers:
-      - image: rakpw/nginx-helloworld:v0.1.19
+      - image: rakpw/nginx-helloworld:v0.1.25
         name: nginx-helloworld
         resources: {}
 status: {}
