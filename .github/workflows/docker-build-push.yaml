@@ -37,8 +37,10 @@ jobs:
 
     - name: Commit and push changes
       run: |
+        IMAGE_TAG=${{ github.ref_name }}
         git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
+        git checkout main
         git add fleet/deployment.yaml
-        git commit -m "Update image tag to ${NEW_IMAGE_TAG}"
+        git commit -m "Update image tag to ${IMAGE_TAG}"
         git push origin main
