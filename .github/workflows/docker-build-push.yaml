@@ -30,6 +30,13 @@ jobs:
         push: true
         tags: rakpw/nginx-helloworld:${{ github.ref_name }}
 
+    - name: Install GitHub CLI
+      run: |
+        curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+        sudo apt update
+        sudo apt install -y g
+
     - name: Update image tag in deployment.yaml
       run: |
         IMAGE_TAG=${{ github.ref_name }}
