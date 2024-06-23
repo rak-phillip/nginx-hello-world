@@ -49,4 +49,5 @@ jobs:
         # Add, commit, and push the changes
         git add fleet/deployment.yaml
         git commit -m "Update deployment.yaml with new image tag ${{ github.ref_name }}"
-        git push
+        git push https://${{ secrets.GITHUB_PAT }}@github.com/${{ github.repository }}.git $DEFAULT_BRANCH
+
